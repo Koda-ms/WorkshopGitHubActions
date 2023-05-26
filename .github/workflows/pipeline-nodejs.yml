@@ -1,0 +1,59 @@
+name: Pipeline NodeJS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    steps: 
+      - name: Checkout Repos
+        uses: actions/checkout@v3
+      
+      - name: Steup Node
+        uses: actions/setup-node@v3
+      
+      - name: Install Dependencies 
+        run: npm install
+        
+      - name: Build
+        run: npm run build
+        
+  test:
+    runs-on: windows-latest
+    steps: 
+      - name: Checkout Repos
+        uses: actions/checkout@v3
+      
+      - name: Steup Node
+        uses: actions/setup-node@v3
+      
+      - name: Install Dependencies 
+        run: npm install
+        
+      - name: Test
+        run: npm run test
+        
+  deploy:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    needs: [build, test]
+    steps: 
+      - name: Checkout Repos
+        uses: actions/checkout@v3
+      
+      - name: Steup Node
+        uses: actions/setup-node@v3
+      
+      - name: Install Dependencies 
+        run: npm install
+        
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
