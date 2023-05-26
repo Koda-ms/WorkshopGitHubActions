@@ -4,10 +4,14 @@ on:
   push: 
     branches:
       - main
-    
+  workflow_dispatch:
+  
 jobs:
   echo_hello_world:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-lateste, ubuntu-latest, macos-latest]
     steps:
       - name: Printar hello world
         run: echo hello world
